@@ -1,0 +1,12 @@
+# PAOM Dashboard theme -- a deliberately distinct dark palette, not
+# an exact match to the linked portfolio site's own colors (by
+# design -- this lives as its own linked product, not a visual
+# clone). Confident, professional slate/teal, chosen to feel
+# coherent with a dark portfolio site without duplicating it.
+
+[theme]
+primaryColor = "#2DD4BF"
+backgroundColor = "#0F1419"
+secondaryBackgroundColor = "#1A222C"
+textColor = "#E8EAED"
+font = "sans serif"

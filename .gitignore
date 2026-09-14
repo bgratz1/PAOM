@@ -1,0 +1,65 @@
+# === Python ===
+__pycache__/
+*.pyc
+*.pyo
+
+# === Raw Statcast pulls (large, fully regeneratable via 74_raw_statcast_pull_by_year.py) ===
+statcast_*_raw.csv
+
+# === Intermediate / diagnostic CSVs ===
+# Ignore all CSVs by default, then explicitly un-ignore the processed
+# files the dashboard actually reads (see data_loader.py). This is
+# safer than listing ~130 individual files to exclude by name.
+*.csv
+
+!PAOM_final_scores.csv
+!PAOM_final_scores_2020.csv
+!PAOM_final_scores_2021.csv
+!PAOM_final_scores_2022.csv
+!PAOM_final_scores_2023.csv
+!PAOM_final_scores_2024.csv
+!PAOM_final_scores_2025.csv
+!PAOM_effectiveness_component.csv
+!PAOM_command_component.csv
+!PAOM_platoon_component.csv
+!PAOM_tunneling_component.csv
+!PAOM_movement_map_points.csv
+!PAOM_movement_component.csv
+!PAOM_movement_map_hulls.csv
+!PAOM_location_map_points.csv
+!PAOM_location_map_means.csv
+!PAOM_release_map_points.csv
+!PAOM_release_map_means.csv
+!PAOM_league_movement_benchmark.csv
+!PAOM_league_release_benchmark.csv
+!PAOM_pitcher_hands.csv
+!historical_recommendations.csv
+!historical_recommendation_comps.csv
+!pitcher_similarity_features_2020_2025.csv
+!pitcher_arsenal_evolution_2020_2025.csv
+!PAOM_pitcher_similarity.csv
+!PAOM_pitcher_similarity_2020.csv
+!PAOM_pitcher_similarity_2021.csv
+!PAOM_pitcher_similarity_2022.csv
+!PAOM_pitcher_similarity_2023.csv
+!PAOM_pitcher_similarity_2024.csv
+!PAOM_pitcher_similarity_2025.csv
+!PAOM_pitcher_map_coordinates.csv
+!PAOM_pitcher_map_coordinates_2020.csv
+!PAOM_pitcher_map_coordinates_2021.csv
+!PAOM_pitcher_map_coordinates_2022.csv
+!PAOM_pitcher_map_coordinates_2023.csv
+!PAOM_pitcher_map_coordinates_2024.csv
+!PAOM_pitcher_map_coordinates_2025.csv
+!PAOM_arsenal_similarity.csv
+!PAOM_arsenal_map_coordinates.csv
+!master_pitch_table_2025.csv
+
+# === Local Streamlit / OS / editor clutter ===
+.DS_Store
+*.log
+.vscode/
+.idea/
+
+# === Known pure duplicates ===
+04arsenal_summary.py
