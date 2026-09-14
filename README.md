@@ -2,7 +2,7 @@
 
 Rating MLB pitch arsenals and recommending evidence-based changes, built from Baseball Savant Statcast data and a Kaggle-sourced arsenal-evolution dataset.
 
-**Live dashboard:** [link]
+**Live dashboard:** https://paomdashboard.streamlit.app/
 **Full writeup:** [link]
 
 ---
