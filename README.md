@@ -1,63 +1,115 @@
-# PAOM Dashboard
+# PAOM: Pitch Arsenal Optimization Model
 
-A Streamlit dashboard for the Pitch Arsenal Optimization Model.
+Rating MLB pitch arsenals and recommending evidence-based changes, built from Baseball Savant Statcast data and a Kaggle-sourced arsenal-evolution dataset.
+
+**Live dashboard:** [link]
+**Full writeup:** [link]
+
+---
+
+## What This Is
+
+Pitch-quality metrics like Stuff+ and pitch-level xwOBA answer a narrow question: how good is this pitch, right now, in isolation? PAOM answers a different question: what should a pitcher actually do about their arsenal?
+
+PAOM has two connected parts:
+
+1. **PAOM Score**, a single 0-100 rating of how good a pitcher's current arsenal is, built from four components: Effectiveness, Movement, Command, and Velocity.
+2. **A historical-precedent recommendation engine**, which finds similar pitchers who made a given kind of arsenal change in the past and predicts the outcome from what happened to them, instead of applying a fixed rule to every pitcher alike.
+
+Both are built into a full interactive dashboard.
+
+## Key Results
+
+- **4,381** historical arsenal-change events across **6 MLB seasons** (2020-2025) back every recommendation the engine produces.
+- **78.9% ranking concordance** on genuinely held-out future seasons for swap predictions, 64-71% for single-change predictions, against a 50% baseline for random chance.
+- The choice of which outcome metric to predict was settled by direct evidence, not assumption: xwOBA-against showed 83.3% sign consistency in a direct test against WAR (56.3%) and FIP (58.3%).
+- A prior, purely structural recommendation system was tested directly against real outcomes and found to underperform a simple baseline across every change type checked. It has been retired from the dashboard as a result.
+- Every one of PAOM Score's four components is refit fresh each season; the weights, coefficients, and leaderboard all shift year to year rather than staying fixed.
+
+See the full writeup for complete methodology, validation, and results.
+
+## Repository Structure
+
+```
+PAOM/
+├── app.py                     Dashboard entry point (Streamlit)
+├── data_loader.py             Shared data loading utilities
+├── styling.py                 Shared dashboard theme and UI helpers
+├── requirements.txt
+├── .gitignore
+├── .streamlit/
+│   └── config.toml
+├── views/                     Dashboard pages
+│   ├── leaderboard.py
+│   ├── top_recommendations.py
+│   ├── pitcher_detail.py
+│   ├── similar_pitchers_map.py
+│   ├── pitcher_comparison.py
+│   ├── pitch_comparison.py
+│   └── methodology.py
+├── archive/                    Earlier design iterations, kept for documented comparison
+│   ├── 16_recommendation_engine.py   The original rule-based engine PAOM replaced
+│   └── ...                          (other earlier, superseded scripts)
+│
+└── (repo root)                Data pipeline, recommendation engine, and validation
+                                scripts, numbered roughly in build order. Not yet split
+                                into subfolders. The pipeline runs 74-84 (Statcast pull
+                                through PAOM Score, year-parameterized 2020-2025); the
+                                recommendation engine is built from 34, 37, 38, 40, 42,
+                                45, 50, 54, 60, 63, 70, 94, 96; everything else in that
+                                range is a real validation, placebo test, or diagnostic
+                                script referenced directly in the writeup.
+```
+
+Numbered scripts follow the rough chronological order they were built in. The full writeup explains the reasoning behind each major design decision, including the ones that were tried and rejected.
 
 ## Setup
 
-1. Place this whole folder (`app.py`, `data_loader.py`, `views/`,
-   `requirements.txt`) directly inside your PAOM project folder --
-   the same folder where your pipeline scripts (`01_...py` through
-   `16_...py`) write their output CSVs. The dashboard reads those
-   CSVs directly from that folder.
+```bash
+pip install -r requirements.txt
+```
 
-2. Install dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
+Raw Statcast data is not stored in this repository. The pipeline scripts regenerate it directly from Baseball Savant.
 
-3. Run:
-   ```
-   streamlit run app.py
-   ```
+```bash
+python 74_raw_statcast_pull_by_year.py 2025
+python 75_clean_statcast_by_year.py 2025
+python 76_effectiveness_by_year.py 2025
+python 77_master_pitch_table_by_year.py 2025
+python 78_velocity_by_year.py 2025
+python 80_movement_by_year.py 2025
+python 81_command_by_year.py 2025
+python 83_paom_score_by_year.py 2025
+```
 
-## Structure
+or run the full pipeline for a single season at once:
 
-This uses Streamlit's modern `st.Page` + `st.navigation` API
-(rather than the older automatic `pages/` directory convention).
-That older convention has documented, version- and OS-dependent
-bugs with `st.switch_page` -- if you ever hit
-`StreamlitAPIException: Could not find page: ...`, it's almost
-always that older mechanism; this structure avoids it.
+```bash
+python 79_run_all_years.py
+```
 
-- `app.py` -- entrypoint. Defines the three pages and runs
-  whichever one is currently active.
-- `views/leaderboard.py` -- league-wide `paom_score` ranking,
-  with a search box to jump to any pitcher's detail page. This is
-  the default page.
-- `views/pitcher_detail.py` -- component score breakdown,
-  movement map, Usage/Drop/Add recommendations, platoon splits,
-  and similar-pitcher comps for one pitcher.
-- `views/similar_pitchers_map.py` -- 2D scatter of either
-  mechanical (release) or arsenal-shape similarity across all
-  pitchers.
-- `data_loader.py` -- shared, cached data loading used by all
-  three views.
+To launch the dashboard once component data exists:
 
-## Required files
+```bash
+streamlit run app.py
+```
 
-The dashboard needs `PAOM_final_scores.csv` and
-`master_pitch_table_2025.csv` to run at all. Every other file is
-optional -- if a given output (e.g. `PAOM_platoon_component.csv`)
-isn't present, that section of the Pitcher Detail page will show
-an info message instead of failing.
+## Data Sources
 
-## Notes
+- **Baseball Savant Statcast**, pulled via [pybaseball](https://github.com/jldbc/pybaseball), 2020-2025 MLB seasons.
+- **MLB Pitcher Arsenal Evolution (2020-2025)**, a Kaggle dataset used for the recommendation engine's historical arsenal-change events. [Link to dataset]
 
-- Data is cached with `st.cache_data`. If you re-run pipeline
-  scripts and want the dashboard to pick up fresh output, restart
-  the Streamlit app (or use the "Clear cache" option in the app's
-  menu).
-- Tested with Streamlit 1.60 using the `AppTest` framework --
-  including the full select-a-pitcher -> click -> switch_page
-  navigation flow -- against representative synthetic data
-  covering every input file. Zero exceptions.
+## Methodology
+
+The full writeup covers:
+
+- How each of the four PAOM Score components is built and validated, including six years of real coefficient and weight trends
+- How the recommendation engine finds comps, predicts outcomes, and ranks candidates across change types
+- Placebo tests, walk-forward validation, and a direct comparison against the prior recommendation system
+- Known limitations and disclosed gaps
+
+[Link to full writeup]
+
+## Author
+
+[Your name]
