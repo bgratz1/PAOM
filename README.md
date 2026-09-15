@@ -96,7 +96,7 @@ streamlit run app.py
 ## Data Sources
 
 - **Baseball Savant Statcast**, pulled via [pybaseball](https://github.com/jldbc/pybaseball), 2020-2025 MLB seasons.
-- **MLB Pitcher Arsenal Evolution (2020-2025)**, a Kaggle dataset used for the recommendation engine's historical arsenal-change events. [Link to dataset]
+- **MLB Pitcher Arsenal Evolution (2020-2025)**, a Kaggle dataset used for the recommendation engine's historical arsenal-change events. https://www.kaggle.com/datasets/yasunorim/mlb-pitcher-arsenal-2020-2025
 
 ## Methodology
 
