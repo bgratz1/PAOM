@@ -107,8 +107,7 @@ The full writeup covers:
 - Placebo tests, walk-forward validation, and a direct comparison against the prior recommendation system
 - Known limitations and disclosed gaps
 
-[Link to full writeup]
 
 ## Author
 
-[Your name]
+Ben Gratz
