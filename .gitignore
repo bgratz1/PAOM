@@ -53,6 +53,7 @@ statcast_*_raw.csv
 !PAOM_pitcher_map_coordinates_2025.csv
 !PAOM_arsenal_similarity.csv
 !PAOM_arsenal_map_coordinates.csv
+!PAOM_velocity_component.csv
 !master_pitch_table_2025.csv
 
 # === Local Streamlit / OS / editor clutter ===
